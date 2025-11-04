@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\PlanetRequest;
+use Illuminate\Http\Request;
 use App\Models\Planet;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +17,7 @@ class PlanetController extends Controller
     public function index(): View
     {
         $planets = Planet::latest()->paginate(10);
-        return view('admin/planets/index', compact('planets'));
+        return view('admin.planets.index', compact('planets'));
     }
 
     /**
@@ -32,20 +32,33 @@ class PlanetController extends Controller
     /**
      * Enregistre une planète.
      */
-    public function store(PlanetRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $data = $request->validated();
 
-        // Upload image si fournie
+        // 1) Données validées (depuis PlanetRequest)
+        $validate = $request->validate([
+            // 'name' => ['required', 'string', 'max:100', 'alpha_dash', 'unique:planets,name'],
+            'name_fr' => ['required', 'string', 'max:150'],
+            'name_en' => ['required', 'string', 'max:150'],
+            'description_fr' => ['required', 'string'],
+            'description_en' => ['required', 'string'],
+            'distance' => ['required', 'numeric', 'min:0'],
+            'duration' => ['required', 'integer', 'min:0'],
+            'image'=> ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+
+
+        ]);
+        // dd($validate);
+        // 3) Upload image (si fournie)
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('planets', 'public'); // ex: storage/app/public/planets/xxx.jpg
+            $path = $request->file('image')->store('planets', 'public'); // => storage/app/public/planets/...
+            $attributes['image'] = $path;
         }
-
-        Planet::create($data);
-
-        return redirect()
-            ->route('admin.planets.index')
-            ->with('status', 'Planète créée avec succès.');
+        // Création de la planète
+        $planet = Planet::create($validate);
+        // Redirection après succès
+        return redirect()->route('admin.planets.index')
+            ->with('success', 'Planète créée avec succès !');
     }
 
     /**
@@ -59,24 +72,32 @@ class PlanetController extends Controller
     /**
      * Met à jour une planète.
      */
-    public function update(PlanetRequest $request, Planet $planet): RedirectResponse
-    {
-        $data = $request->validated();
+public function update(Request $request, Planet $planet): RedirectResponse
+{
+    $validated = $request->validate([
+        'name_fr' => 'required|string|max:255',
+        'name_en' => 'required|string|max:255',
+        'description_fr' => 'nullable|string',
+        'description_en' => 'nullable|string',
+        'distance' => 'required|numeric',
+        'duration' => 'required|numeric',
+        'image' => 'nullable|image|max:2048',
+    ]);
 
-        // Nouvelle image => on supprime l’ancienne si elle existe
-        if ($request->hasFile('image')) {
-            if (!empty($planet->image) && Storage::disk('public')->exists($planet->image)) {
-                Storage::disk('public')->delete($planet->image);
-            }
-            $data['image'] = $request->file('image')->store('planets', 'public');
+    // Gestion de l’image
+    if ($request->hasFile('image')) {
+        if (!empty($planet->image) && Storage::disk('public')->exists($planet->image)) {
+            Storage::disk('public')->delete($planet->image);
         }
-
-        $planet->update($data);
-
-        return redirect()
-            ->route('admin.planets.index')
-            ->with('status', 'Planète mise à jour avec succès.');
+        $validated['image'] = $request->file('image')->store('planets', 'public');
     }
+
+    $planet->update($validated);
+
+    return redirect()
+        ->route('admin.planets.index')
+        ->with('status', 'Planète mise à jour avec succès.');
+}
 
     /**
      * Supprime une planète (et son image associée).
