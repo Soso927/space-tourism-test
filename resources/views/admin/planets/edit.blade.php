@@ -97,7 +97,7 @@
             <div>
                 <label for="distance" class="block text-sm font-medium mb-1">Distance (en km)</label>
                 <input
-                    type="number"
+                    type="text"
                     step="0.01"
                     id="distance"
                     name="distance"
@@ -115,7 +115,7 @@
             <div>
                 <label for="duration" class="block text-sm font-medium mb-1">Durée du voyage (en mois)</label>
                 <input
-                    type="number"
+                    type="text"
                     step="1"
                     min="0"
                     id="duration"

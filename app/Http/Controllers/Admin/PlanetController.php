@@ -42,8 +42,8 @@ class PlanetController extends Controller
             'name_en' => ['required', 'string', 'max:150'],
             'description_fr' => ['required', 'string'],
             'description_en' => ['required', 'string'],
-            'distance' => ['required', 'numeric', 'min:0'],
-            'duration' => ['required', 'integer', 'min:0'],
+            'distance' => ['required', 'string', 'min:0'],
+            'duration' => ['required', 'string', 'min:0'],
             'image'=> ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
 
 
@@ -79,8 +79,8 @@ public function update(Request $request, Planet $planet): RedirectResponse
         'name_en' => 'required|string|max:255',
         'description_fr' => 'nullable|string',
         'description_en' => 'nullable|string',
-        'distance' => 'required|numeric',
-        'duration' => 'required|numeric',
+        'distance' => 'required|string',
+        'duration' => 'required|string',
         'image' => 'nullable|image|max:2048',
     ]);
 

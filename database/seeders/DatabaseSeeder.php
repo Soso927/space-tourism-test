@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesPermissionsSeeder::class, // crée roles & perms
             UsersSeeder::class,            // crée users + assigne rôles
-            // PlanetsSeeder::class,       // si tu as des données de démo
+            PlanetSeeder::class,       // si tu as des données de démo
         ]);
     }
 }

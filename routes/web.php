@@ -2,17 +2,21 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use App\Models\Planet;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\PlanetController;
-
+use App\Http\Controllers\DestinationController;
 /*
 |--------------------------------------------------------------------------
 | Front-office public (pages maquette)
 |--------------------------------------------------------------------------
 | Noms de routes : accueil, destination, equipage, technologie
 */
-Route::get('/', fn () => view('vue.accueil'))->name('accueil');
+Route::get('/', fn () => view(view: 'vue.accueil'))->name('accueil');
 Route::get('/destination', fn () => view('vue.destination'))->name('destination');
+// Route::get('/destination/{id}', [DestinationController::class, 'publicShow'])
+//     ->whereNumber('id')
+//     ->name('destination');
 Route::get('/equipage', fn () => view('vue.equipage'))->name('equipage');
 Route::get('/technologie', fn () => view('vue.technologie'))->name('technologie');
 /*

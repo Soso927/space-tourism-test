@@ -16,7 +16,7 @@
                     <x-nav-link :href="route('accueil')" :active="request()->routeIs('accueil')">
                         Accueil
                     </x-nav-link>
-                    <x-nav-link :href="route('destination')" :active="request()->routeIs('destination')">
+                    <x-nav-link :href="route('destination', ['id' => 1])" :active="request()->routeIs('destination')">
                         Destination
                     </x-nav-link>
                     <x-nav-link :href="route('equipage')" :active="request()->routeIs('equipage')">
@@ -48,7 +48,7 @@
                     @endrole
                 </div>
             </div>
-          <!-- Settings Dropdown -->
+            <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">

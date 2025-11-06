@@ -23,6 +23,12 @@ class Planet extends Model
         'duration',
     ];
 
+
+//     public function getRouteKeyName()
+// {
+//     return 'slug';
+// }
+
     // Si je veux caster certains champs, je le ferai ici.
     // protected $casts = [];
 }
