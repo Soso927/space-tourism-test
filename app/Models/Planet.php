@@ -21,6 +21,7 @@ class Planet extends Model
         'image',
         'distance',
         'duration',
+        'slug',
     ];
 
 

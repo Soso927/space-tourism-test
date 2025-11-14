@@ -23,4 +23,23 @@ class DestinationController extends Controller
 
         return view ('vue.destination', compact('data'));
     }
+     public function show($slug)
+    {
+        // Récupération de toutes les planètes pour le menu
+        $planets = Planet::all();
+
+        // On récupère la planète correspondant au slug
+        $planet = Planet::where('slug', $slug)->first();
+
+        // Si slug invalide : fallback vers la première planète
+        if (!$planet) {
+            $planet = $planets->first();
+        }
+
+        return view('destination', [
+            'planets' => $planets,
+            'planet'  => $planet
+        ]);
+    }
+
 }

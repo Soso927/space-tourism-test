@@ -14,9 +14,6 @@ use App\Http\Controllers\DestinationController;
 */
 Route::get('/', fn () => view(view: 'vue.accueil'))->name('accueil');
 Route::get('/destination', fn () => view('vue.destination'))->name('destination');
-// Route::get('/destination/{id}', [DestinationController::class, 'publicShow'])
-//     ->whereNumber('id')
-//     ->name('destination');
 Route::get('/equipage', fn () => view('vue.equipage'))->name('equipage');
 Route::get('/technologie', fn () => view('vue.technologie'))->name('technologie');
 /*
@@ -64,26 +61,30 @@ Route::middleware('auth')->group(function () {
 | - On NE redéfinit PAS chaque route (index/create/store/...) une seconde fois.
 |   Sinon on crée des collisions et des erreurs 405.
 */
-Route::prefix('admin')
+Route::middleware(['auth', 'role:admin|planetManager'])
+    ->prefix('admin')
     ->name('admin.')
-    ->middleware(['auth', 'role:admin|planetManager|crewManager']) // <- ou ['auth','can:admin'] si tu préfères le Gate
     ->group(function () {
-
-        // Resource complète "admin.planets.*"
-        Route::resource('planets', PlanetController::class)
-            ->names('planets')
-            // Middleware de permission par action (Spatie ≥ v5)
-            ->middleware([
-                'index'   => 'permission:planets.view',
-                // 'show'    => 'permission:planets.view',      // si tu ajoutes show plus tard
-                'create'  => 'permission:planets.create',
-                'store'   => 'permission:planets.create',
-                'edit'    => 'permission:planets.edit',
-                'update'  => 'permission:planets.edit',
-                'destroy' => 'permission:planets.delete',
-            ]);
+        Route::resource('planets', App\Http\Controllers\Admin\PlanetController::class);
     });
 
+
+// Redirection automatique vers la première planète
+
+Route::get('/destination', function () {
+    $first = Planet::first();
+    if (!$first) {
+        abort(404);
+    }
+
+    return redirect()->route('destination.show', $first->slug);
+})->name('destination');
+
+//
+// 2 - Page Destination avec slug obligatoire
+//
+Route::get('/destination/{slug}', [DestinationController::class, 'show'])
+    ->name('destination.show');
 /*
 |--------------------------------------------------------------------------
 | Routes d’authentification (Breeze)

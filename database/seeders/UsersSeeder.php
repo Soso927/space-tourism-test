@@ -22,6 +22,7 @@ class UsersSeeder extends Seeder
                 'password' => '123456789',  
                 'role' => 'admin',
             ],
+              $sofiane->assignRole('admin');
 
             // --- Démo / tests
             [
@@ -43,6 +44,7 @@ class UsersSeeder extends Seeder
                 'role'  => 'crewManager',
             ],
         ];
+
 
         foreach ($users as $u) {
             $newUser = User::updateOrCreate(

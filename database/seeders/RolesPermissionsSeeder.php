@@ -10,49 +10,64 @@ class RolesPermissionsSeeder extends Seeder
 {
     public function run(): void
     {
-        // Toujours vider le cache interne de Spatie avant d'altérer la matrice
-        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-
-        // --- Permissions (adaptées au TP Planètes)
-        $perms = [
+        // --- Liste complète des permissions ---
+        $permissions = [
+            // Planètes
             'planets.view',
             'planets.create',
-            'planets.edit',
+            'planets.update',
             'planets.delete',
-            'crews.view',
-            'crews.create',
-            'crews.edit',
-            'crews.delete',
-            'users.manage',
+
+            // Équipage (prévu pour la partie suivante)
+            'crew.view',
+            'crew.create',
+            'crew.update',
+            'crew.delete',
+
+            // Technologies (prévu pour la suite aussi)
+            'technologies.view',
+            'technologies.create',
+            'technologies.update',
+            'technologies.delete',
         ];
 
-        foreach ($perms as $p) {
-            Permission::firstOrCreate(['name' => $p, 'guard_name' => 'web']);
+        // Création des permissions si elles n'existent pas déjà
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
         }
 
-        // --- Rôles
-        $admin  = Role::firstOrCreate(['name' => 'admin',  'guard_name' => 'web']);
-        $planetManager = Role::firstOrCreate(['name' => 'planetManager', 'guard_name' => 'web']);
-        $crewManager = Role::firstOrCreate(['name' => 'crewManager', 'guard_name' => 'web']);
+        // --- Création des rôles ---
+        $admin = Role::firstOrCreate(['name' => 'admin']);
+        $gestionnairePlanetes = Role::firstOrCreate(['name' => 'gestionnaire_planetes']);
+        $gestionnaireEquipage = Role::firstOrCreate(['name' => 'gestionnaire_equipage']);
+        $gestionnaireTechnologies = Role::firstOrCreate(['name' => 'gestionnaire_technologies']);
 
-        // --- Matrice rôles → permissions
-        $admin->syncPermissions(Permission::all());
+        // --- Attribution des permissions à chaque rôle ---
+        // Admin a toutes les permissions
+        $admin->givePermissionTo(Permission::all());
 
-        $planetManager->syncPermissions([
+        // Gestionnaire de planètes : uniquement les permissions planètes
+        $gestionnairePlanetes->givePermissionTo([
             'planets.view',
             'planets.create',
-            'planets.edit',
+            'planets.update',
             'planets.delete',
         ]);
 
-        $crewManager->syncPermissions([
-            'crews.view',
-            'crews.create',
-            'crews.edit',
-            'crews.delete',
+        // Équipage
+        $gestionnaireEquipage->givePermissionTo([
+            'crew.view',
+            'crew.create',
+            'crew.update',
+            'crew.delete',
         ]);
 
-        // Rafraîchir le cache des permissions
-        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        // Technologies
+        $gestionnaireTechnologies->givePermissionTo([
+            'technologies.view',
+            'technologies.create',
+            'technologies.update',
+            'technologies.delete',
+        ]);
     }
 }

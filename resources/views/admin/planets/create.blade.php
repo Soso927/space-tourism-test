@@ -62,6 +62,23 @@
                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                 @enderror
             </div>
+               
+            <div>
+                <label for="slug" class="block text-sm font-medium mb-1">Slug</label>
+                <input
+                    type="text"
+                    id="slug"
+                    name="slug"
+                    value="{{ old('slug') }}"
+                    class="w-full rounded border border-white/10 bg-white/5 px-3 py-2"
+                    placeholder="ex : europa"
+                    required
+                >
+                @error('slug')
+                    <p class="mt-1 text-sm text-red-300">{{ $message }}</p>
+                @enderror
+                <p class="mt-1 text-xs text-gray-400">Minuscules, tirets. Doit être unique.</p>
+            </div>
 
             {{-- description_fr --}}
             <div>

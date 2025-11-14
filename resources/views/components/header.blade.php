@@ -5,11 +5,9 @@
         <img src="{{ asset('/images/logo.png') }}" alt="TP Space tourisme" class="h-10 w-auto">
     </a>
 
-
     <nav role="navigation" aria-label="Menu principal"
         class="hidden sm:flex items-center gap-12 bg-white/5 backdrop-blur-lg px-12 py-4
             uppercase text-white tracking-[0.25em] text-sm font-light">
-
 
         {{-- Accueil --}}
         <a href="{{ route('accueil') }}"
@@ -19,43 +17,45 @@
 
         {{-- Destination --}}
         <a href="{{ route('destination', ['id' => 3]) }}"
-            class=" 'border-b-2 border-white pb-1 font-normal' : 'opacity-70 hover:opacity-100' }}">
+            class="'border-b-2 border-white pb-1 font-normal' : 'opacity-70 hover:opacity-100' }}">
             <span class="font-bold mr-2">01 Destination</span>
         </a>
 
         {{-- Équipage --}}
         <a href="{{ route('equipage') }}"
-            class=" 'border-b-2 border-white pb-1 font-normal' : 'opacity-70 hover:opacity-100' }}">
-            <span class="font-bold mr-2">02 Equipage</span>
+            class="'border-b-2 border-white pb-1 font-normal' : 'opacity-70 hover:opacity-100' }}">
+            <span class="font-bold mr-2">02 Équipage</span>
         </a>
 
         {{-- Technologie --}}
         <a href="{{ route('technologie') }}"
-            class=" 'border-b-2 border-white pb-1 font-normal' : 'opacity-70 hover:opacity-100' }}">
+            class="'border-b-2 border-white pb-1 font-normal' : 'opacity-70 hover:opacity-100' }}">
             <span class="font-bold mr-2">03 Technologie</span>
         </a>
+
+        {{-- Connexion --}}
         <a href="{{ route('login') }}"
             class="opacity-70 hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
             <span class="font-bold mr-2">04</span> Connexion
         </a>
 
-            <div class="flex gap-4 text-white">
-                <a href="{{ url('lang/fr') }}" class="{{ app()->getLocale() === 'fr' ? 'font-bold underline' : '' }}">
-                    FR
-                </a>
+        {{-- 🌍 Sélecteur de langue --}}
+        <div class="flex gap-4 text-white">
+            <a href="{{ url('lang/fr') }}" class="{{ app()->getLocale() === 'fr' ? 'font-bold underline' : '' }}">
+                FR
+            </a>
 
-                <a href="{{ url('lang/en') }}" class="{{ app()->getLocale() === 'en' ? 'font-bold underline' : '' }}">
-                    EN
-                </a>
-            </div>
+            <a href="{{ url('lang/en') }}" class="{{ app()->getLocale() === 'en' ? 'font-bold underline' : '' }}">
+                EN
+            </a>
+        </div>
+
+    
     </nav>
-
-
 
     <button id="menu-btn" aria-label="Ouvrir le menu mobile" aria-expanded="false"
         class="md:hidden text-white text-3xl">☰</button>
 </header>
-
 
 <nav id="mobile-menu" role="navigation" aria-label="Menu mobile"
     class="hidden fixed top-0 right-0 w-1/2 h-full bg-black/80 backdrop-blur-lg
@@ -76,7 +76,7 @@
     // Ouvrir le menu
     menuBtn.addEventListener('click', () => {
         mobileMenu.classList.remove('hidden');
-        mobileMenu.classList.add('flex'); // affichage flex en colonne
+        mobileMenu.classList.add('flex');
         mobileMenu.classList.add('flex-col');
         menuBtn.setAttribute('aria-expanded', 'true');
     });

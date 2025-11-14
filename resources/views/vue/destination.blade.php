@@ -26,10 +26,14 @@
                 <!-- Navigation -->
                 <nav
                     class="flex flex-wrap justify-center lg:justify-start gap-6 uppercase tracking-[0.2em] mb-4 sm:mb-6 border-b border-[#383B4B]/80 pb-3">
-                    <a href="#" class="relative pb-2 text-white border-b-2 border-white">{{ __('destinations.moon') }}</a>
-                    <a href="#" class="text-blue-200 hover:text-white transition-colors pb-2">{{ __('destinations.mars') }}</a>
-                    <a href="#" class="text-blue-200 hover:text-white transition-colors pb-2">{{ __('destinations.europa') }}</a>
-                    <a href="#" class="text-blue-200 hover:text-white transition-colors pb-2">{{ __('destinations.titan') }}</a>
+                        @foreach($planet as $p)
+        <a 
+            href="{{ route('destination.show', $p->slug) }}"
+            class="{{ $planet->id === $p->id ? 'border-b-2 border-white text-white' : 'text-blue-200 hover:text-white' }} pb-2"
+        >
+            {{ strtoupper($p->name_en) }}
+        </a>
+    @endforeach
                 </nav>
 
                 <!-- Nom de la planète -->
