@@ -7,39 +7,23 @@ use App\Models\Planet;
 
 class DestinationController extends Controller
 {
-       public function index($planetId = null)
+    // Affiche la première planète (appelé via /destination)
+    public function index()
     {
         $planets = Planet::all();
+      
 
-        $planet = $planetId
-            ? Planet::findOrFail($planetId)
-            : $planets->first();
+        $planet = $planets->first(); // Charge la première planète
 
-        return view('destination', compact('planets', 'planet'));
+        return view('vue.destination', compact('planet', 'planets'));
     }
-    public function publicShow(int $id) {
-       $data = Planet::query()->select('name_fr','description_fr','image','distance','duration')->where('id','=',$id)->first();
-        
 
-        return view ('vue.destination', compact('data'));
-    }
-     public function show($slug)
+    // Affiche une planète précise via le slug (appelé via /destination/{slug})
+    public function show(string $slug)
     {
-        // Récupération de toutes les planètes pour le menu
         $planets = Planet::all();
+        $planet = Planet::where('slug', $slug)->firstOrFail();
 
-        // On récupère la planète correspondant au slug
-        $planet = Planet::where('slug', $slug)->first();
-
-        // Si slug invalide : fallback vers la première planète
-        if (!$planet) {
-            $planet = $planets->first();
-        }
-
-        return view('destination', [
-            'planets' => $planets,
-            'planet'  => $planet
-        ]);
+        return view('vue.destination', compact('planet', 'planets'));
     }
-
 }
