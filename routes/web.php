@@ -72,7 +72,7 @@ Route::middleware(['auth', 'role:admin|planetManager'])
 
 // 1️⃣ Page destination sans slug → on affiche la 1ère planète
 Route::get('/destination', [DestinationController::class, 'index'])
-    ->name('destination');
+     ->name('destination');
 
 // 2️⃣ Page destination avec slug
 Route::get('/destination/{slug}', [DestinationController::class, 'show'])

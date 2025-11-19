@@ -22,7 +22,6 @@ class UsersSeeder extends Seeder
                 'password' => '123456789',  
                 'role' => 'admin',
             ],
-              $sofiane->assignRole('admin');
 
             // --- Démo / tests
             [

@@ -32,35 +32,42 @@ class PlanetController extends Controller
     /**
      * Enregistre une planète.
      */
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'name_fr' => ['required', 'string', 'max:150'],
-            'name_en' => ['required', 'string', 'max:150'],
-            'description_fr' => ['required', 'string'],
-            'description_en' => ['required', 'string'],
-            'distance' => ['required', 'string'],
-            'duration' => ['required', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'slug' => ['nullable', 'string', 'unique:planets,slug', 'max:255'],
-        ]);
+public function store(Request $request): RedirectResponse
+{
+    $validated = $request->validate([
+        'name_fr' => ['required', 'string', 'max:150'],
+        'name_en' => ['required', 'string', 'max:150'],
+        'description_fr' => ['required', 'string'],
+        'description_en' => ['required', 'string'],
+        'distance' => ['required', 'string'],
+        'duration' => ['required', 'string'],
+        'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
 
-        // 🔧 Génération automatique du slug si vide
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['name_fr'], '-');
-        }
+        // 🆕 Slugs FR & EN
+        'slug_fr' => ['nullable', 'string', 'unique:planets,slug_fr', 'max:255'],
+        'slug_en' => ['nullable', 'string', 'unique:planets,slug_en', 'max:255'],
+    ]);
 
-        // 📸 Upload image
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('planets', 'public');
-        }
-
-        Planet::create($validated);
-
-        return redirect()
-            ->route('admin.planets.index')
-            ->with('success', 'Planète créée avec succès !');
+    // Slugs automatiques si champ vide
+    if (empty($validated['slug_fr'])) {
+        $validated['slug_fr'] = Str::slug($validated['name_fr'], '-');
     }
+    if (empty($validated['slug_en'])) {
+        $validated['slug_en'] = Str::slug($validated['name_en'], '-');
+    }
+
+    // Image
+    if ($request->hasFile('image')) {
+        $validated['image'] = $request->file('image')->store('planets', 'public');
+    }
+
+    Planet::create($validated);
+
+    return redirect()
+        ->route('admin.planets.index')
+        ->with('success', 'Planète créée avec succès !');
+}
+
 
     /**
      * Formulaire d’édition.
@@ -73,39 +80,46 @@ class PlanetController extends Controller
     /**
      * Met à jour une planète.
      */
-    public function update(Request $request, Planet $planet): RedirectResponse
-    {
-        $validated = $request->validate([
-            'name_fr' => ['required', 'string', 'max:150'],
-            'name_en' => ['required', 'string', 'max:150'],
-            'description_fr' => ['nullable', 'string'],
-            'description_en' => ['nullable', 'string'],
-            'distance' => ['required', 'string'],
-            'duration' => ['required', 'string'],
-            'image' => ['nullable', 'image', 'max:2048'],
-            'slug' => ['nullable', 'string', 'max:255', "unique:planets,slug,{$planet->id}"],
-        ]);
+  public function update(Request $request, Planet $planet): RedirectResponse
+{
+    $validated = $request->validate([
+        'name_fr' => ['required', 'string', 'max:150'],
+        'name_en' => ['required', 'string', 'max:150'],
+        'description_fr' => ['nullable', 'string'],
+        'description_en' => ['nullable', 'string'],
+        'distance' => ['required', 'string'],
+        'duration' => ['required', 'string'],
+        'image' => ['nullable', 'image', 'max:2048'],
 
-        // slug auto si vide
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['name_fr'], '-');
-        }
+        // 🆕 Slugs FR & EN
+        'slug_fr' => ['nullable', 'string', 'max:255', "unique:planets,slug_fr,{$planet->id}"],
+        'slug_en' => ['nullable', 'string', 'max:255', "unique:planets,slug_en,{$planet->id}"],
+    ]);
 
-        // 📸 Gestion de l’image
-        if ($request->hasFile('image')) {
-            if (!empty($planet->image) && Storage::disk('public')->exists($planet->image)) {
-                Storage::disk('public')->delete($planet->image);
-            }
-
-            $validated['image'] = $request->file('image')->store('planets', 'public');
-        }
-
-        $planet->update($validated);
-
-        return redirect()
-            ->route('admin.planets.index')
-            ->with('success', 'Planète mise à jour avec succès !');
+    // Slugs automatiques si champ vide
+    if (empty($validated['slug_fr'])) {
+        $validated['slug_fr'] = Str::slug($validated['name_fr'], '-');
     }
+    if (empty($validated['slug_en'])) {
+        $validated['slug_en'] = Str::slug($validated['name_en'], '-');
+    }
+
+    // Image
+    if ($request->hasFile('image')) {
+        if (!empty($planet->image) && Storage::disk('public')->exists($planet->image)) {
+            Storage::disk('public')->delete($planet->image);
+        }
+
+        $validated['image'] = $request->file('image')->store('planets', 'public');
+    }
+
+    $planet->update($validated);
+
+    return redirect()
+        ->route('admin.planets.index')
+        ->with('success', 'Planète mise à jour avec succès !');
+}
+
 
     /**
      * Supprime une planète.

@@ -16,7 +16,7 @@
         </a>
 
         {{-- Destination --}}
-        <a href="{{ route('destination', ['id' => 3]) }}"
+        <a href="{{ route('destination.show', ['slug' => 'moon']) }}"
             class="'border-b-2 border-white pb-1 font-normal' : 'opacity-70 hover:opacity-100' }}">
             <span class="font-bold mr-2">01 Destination</span>
         </a>

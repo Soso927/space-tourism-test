@@ -36,9 +36,6 @@
                 <input type="text" id="name_fr" name="name_fr" value="{{ old('name_fr', $planet->name_fr) }}"
                     class="w-full rounded border border-white/10 bg-white/5 px-3 py-2" placeholder="ex : Europe"
                     required>
-                @error('name_fr')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
             </div>
 
             {{-- name_en --}}
@@ -47,22 +44,21 @@
                 <input type="text" id="name_en" name="name_en" value="{{ old('name_en', $planet->name_en) }}"
                     class="w-full rounded border border-white/10 bg-white/5 px-3 py-2" placeholder="e.g. Europa"
                     required>
-                @error('name_en')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
             </div>
 
-            {{-- slug  --}}
+            {{-- slug_fr --}}
             <div>
-                <label for="slug" class="block text-sm font-medium mb-1">Slug</label>
-                <input type="text" id="slug" name="slug" value="{{ old('slug', $planet->slug) }}"
-                    class="w-full rounded border border-white/10 bg-white/5 px-3 py-2" placeholder="ex : europa"
-                    required>
-                @error('slug')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
+                <label for="slug_fr" class="block text-sm font-medium mb-1">Slug (FR)</label>
+                <input type="text" id="slug_fr" name="slug_fr" value="{{ old('slug_fr', $planet->slug_fr) }}"
+                    class="w-full rounded border border-white/10 bg-white/5 px-3 py-2" placeholder="ex : lune">
             </div>
 
+            {{-- slug_en --}}
+            <div>
+                <label for="slug_en" class="block text-sm font-medium mb-1">Slug (EN)</label>
+                <input type="text" id="slug_en" name="slug_en" value="{{ old('slug_en', $planet->slug_en) }}"
+                    class="w-full rounded border border-white/10 bg-white/5 px-3 py-2" placeholder="e.g. moon">
+            </div>
             {{-- description_fr --}}
             <div>
                 <label for="description_fr" class="block text-sm font-medium mb-1">Description (FR)</label>

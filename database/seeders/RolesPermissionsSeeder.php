@@ -38,9 +38,9 @@ class RolesPermissionsSeeder extends Seeder
 
         // --- Création des rôles ---
         $admin = Role::firstOrCreate(['name' => 'admin']);
-        $gestionnairePlanetes = Role::firstOrCreate(['name' => 'gestionnaire_planetes']);
-        $gestionnaireEquipage = Role::firstOrCreate(['name' => 'gestionnaire_equipage']);
-        $gestionnaireTechnologies = Role::firstOrCreate(['name' => 'gestionnaire_technologies']);
+        $gestionnairePlanetes = Role::firstOrCreate(['name' => 'planetManager']);
+        $gestionnaireEquipage = Role::firstOrCreate(['name' => 'crewManager']);
+        $gestionnaireTechnologies = Role::firstOrCreate(['name' => 'techManager']);
 
         // --- Attribution des permissions à chaque rôle ---
         // Admin a toutes les permissions
