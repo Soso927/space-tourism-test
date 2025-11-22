@@ -17,12 +17,10 @@
         <div class="flex flex-col lg:flex-row lg:justify-center gap-x-20">
 
             <!-- IMAGE DE LA PLANÈTE -->
-            <img 
-                src="{{ $planet?->image ? asset($planet->image) : asset('images/default-planet.png') }}"
-                alt="{{ $planet->name }}"
-                class="w-auto sm:w-56 md:w-72 lg:w-[500px] xl:w-[580px] h-auto mb-6 sm:mb-8 lg:mb-0"
-            />
-
+            <img
+                src="{{ $planet?->image ? asset('storage/' . $planet->image) : asset('images/default-planet.png') }}"
+                alt="{{ app()->getLocale() === 'fr' ? $planet->name_fr : $planet->name_en }}"
+                class="w-auto sm:w-56 md:w-72 lg:w-[500px] xl:w-[580px] h-auto mb-6 sm:mb-8 lg:mb-0" />
             <!-- COLONNE TEXTE -->
             <div class="flex flex-col lg:flex-col">
 
@@ -31,22 +29,22 @@
                     class="flex flex-wrap justify-center lg:justify-start gap-6 uppercase tracking-[0.2em] mb-4 sm:mb-6 border-b border-[#383B4B]/80 pb-3">
 
                     @foreach ($planets as $p)
-                        @php
-                            // Détermine le slug selon la langue
-                            $slug = app()->getLocale() === 'en' ? $p->slug_en : $p->slug_fr;
+                    @php
+                    // Détermine le slug selon la langue
+                    $slug = app()->getLocale() === 'en' ? $p->slug_en : $p->slug_fr;
 
-                            // Détermine le label FR/EN pour l'affichage
-                            $label = app()->getLocale() === 'en' ? $p->name_en : $p->name_fr;
+                    // Détermine le label FR/EN pour l'affichage
+                    $label = app()->getLocale() === 'en' ? $p->name_en : $p->name_fr;
 
-                            // Détermine si l'onglet correspond à la planète active
-                            $isActive = $planet->id === $p->id;
-                        @endphp
+                    // Détermine si l'onglet correspond à la planète active
+                    $isActive = $planet->id === $p->id;
+                    @endphp
 
-                        <a href="{{ route('destination.show', $slug) }}"
-                            class="pb-2 uppercase tracking-[0.2em]
+                    <a href="{{ route('destination.show', $slug) }}"
+                        class="pb-2 uppercase tracking-[0.2em]
                             {{ $isActive ? 'text-white border-b-2 border-white' : 'text-blue-200 hover:text-white' }}">
-                            {{ $label }}
-                        </a>
+                        {{ $label }}
+                    </a>
                     @endforeach
 
                 </nav>

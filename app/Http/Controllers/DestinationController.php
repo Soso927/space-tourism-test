@@ -16,6 +16,8 @@ class DestinationController extends Controller
         $planet = $planets->first(); // Charge la première planète
 
         return view('vue.destination', compact('planet', 'planets'));
+        
+
     }
 
     // Affiche une planète précise via le slug (appelé via /destination/{slug})
