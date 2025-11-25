@@ -6,7 +6,7 @@ use App\Models\Planet;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\PlanetController;
 use App\Http\Controllers\DestinationController;
-
+use App\Http\Controllers\CrewMemberController;
 /*
 |--------------------------------------------------------------------------
 | Front-office public (maquette)
@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Back-office Admin (CRUD Planètes) — Spatie
+| Back-office Admin (CRUD Planètes & Équipage) — Spatie
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin|planetManager'])
@@ -59,7 +59,10 @@ Route::middleware(['auth', 'role:admin|planetManager'])
     ->name('admin.')
     ->group(function () {
         Route::resource('planets', PlanetController::class);
+        Route::resource('crew', CrewMemberController::class);
     });
+
+
 
 /*
 |--------------------------------------------------------------------------

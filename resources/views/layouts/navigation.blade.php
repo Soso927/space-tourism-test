@@ -46,6 +46,11 @@
                             Gestion des planètes
                         </x-nav-link>
                     @endrole
+                    @role('admin')
+                        <x-nav-link :href="route('admin.crew.index')" :active="request()->routeIs('admin.crew.*')">
+                            Gestion des équipages
+                        </x-nav-link>
+                    @endrole
                 </div>
             </div>
             <!-- Settings Dropdown -->
