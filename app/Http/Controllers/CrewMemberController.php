@@ -11,6 +11,7 @@ class CrewMemberController extends Controller
     public function index()
     {
         $crewMembers = CrewMember::paginate(10);
+        dd($crewMembers); // Ceci affichera les données
         return view('admin.crew.index', compact('crewMembers'));
     }
 
@@ -78,12 +79,25 @@ public function store(Request $request)
     return redirect()->route('admin.crew.index')->with('success', 'Membre mis à jour !');
     }
 
-    public function destroy(CrewMember $crewMember)
+  public function destroy(CrewMember $crew)
+{
+    $crew->delete();
+
+    return redirect()->route('admin.crew.index')
+                     ->with('success', 'Membre supprimé avec succès');
+}
+
+  public function show($slug = null)
     {
-        if ($crewMember->image) {
-            Storage::disk('public')->delete($crewMember->image);
-        }
-        $crewMember->delete();
-        return redirect()->route('admin.crew.index')->with('success', 'Membre supprimé.');
+        $crewMembers = CrewMember::all();
+        
+        // Si pas de slug, affiche le premier
+        $current = $slug ? CrewMember::where('slug', $slug)->firstOrFail() : $crewMembers->first();
+        
+        return view('vue.equipage', [
+            'crewMembers' => $crewMembers,
+            'current' => $current,
+        ]);
     }
+
 }

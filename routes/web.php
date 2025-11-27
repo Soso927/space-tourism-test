@@ -14,7 +14,7 @@ use App\Http\Controllers\CrewMemberController;
 */
 Route::get('/', fn () => view('vue.accueil'))->name('accueil');
 
-Route::get('/equipage', fn () => view('vue.equipage'))->name('equipage');
+Route::get('/equipage/{slug?}', [CrewMemberController::class, 'show'])->name('equipage');
 Route::get('/technologie', fn () => view('vue.technologie'))->name('technologie');
 
 /*

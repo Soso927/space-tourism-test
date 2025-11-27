@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             RolesPermissionsSeeder::class, // crée roles & perms
             UsersSeeder::class,            // crée users + assigne rôles
             PlanetSeeder::class,       // si tu as des données de démo
+            CrewMemberSeeder::class,      // si tu as des données de démo
         ]);
     }
 }
