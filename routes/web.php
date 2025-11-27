@@ -54,14 +54,24 @@ Route::middleware('auth')->group(function () {
 | Back-office Admin (CRUD Planètes & Équipage) — Spatie
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin|planetManager'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-        Route::resource('planets', PlanetController::class);
-        Route::resource('crew', CrewMemberController::class);
-    });
+// Route::middleware(['auth', 'role:admin|planetManager'])
+//     ->prefix('admin')
+//     ->name('admin.')
+//     ->group(function () {
+//         Route::resource('planets', PlanetController::class);
+//         Route::resource('crew', CrewMemberController::class);
+//     });
 
+
+Route::prefix('admin')->middleware(['auth', 'role:admin|planetManager'])->group(function () {
+
+    Route::resource('planets', PlanetController::class)->names('admin.planets');
+
+
+    Route::resource('crew', CrewMemberController::class)
+        ->names('admin.crew');
+
+});
 
 
 /*

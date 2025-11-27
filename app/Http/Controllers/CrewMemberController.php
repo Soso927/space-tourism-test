@@ -19,56 +19,63 @@ class CrewMemberController extends Controller
         return view('admin.crew.create');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name_fr' => 'required|string|max:255',
-            'name_en' => 'required|string|max:255',
-            'role_fr' => 'required|string|max:255',
-            'role_en' => 'required|string|max:255',
-            'bio_fr' => 'required|string',
-            'bio_en' => 'required|string',
-            'image' => 'required|image|max:2048',
-        ]);
+public function store(Request $request)
+{
+    $data = $request->validate([
+        'name_fr' => 'required|string|max:255',
+        'name_en' => 'required|string|max:255',
+        'role_fr' => 'required|string|max:255',
+        'role_en' => 'required|string|max:255',
+        'bio_fr' => 'required|string',
+        'bio_en' => 'required|string',
+        'image' => 'required|image|max:2048',
+    ]);
 
-        $path = $request->file('image')->store('crew', 'public');
+    // Correction ici
+    $data['image'] = $request->file('image')->store('crew', 'public');
 
-        CrewMember::create([
-            'name' => $request->name,
-            'role' => $request->role,
-            'bio' => $request->bio,
-            'image' => $path,
-        ]);
+    CrewMember::create($data);
 
-        return redirect()->route('admin.crew.index')->with('success', 'Membre ajouté !');
-    }
+    return redirect()
+        ->route('admin.crew.index')
+        ->with('success', 'Membre ajouté !');
+}
+//     public function edit($id)
+// {
+//     $crewMember = CrewMember::find($id);
 
-    public function edit(CrewMember $crewMember)
-    {
-        return view('admin.crew.edit', compact('crewMember'));
-    }
+//     dd($id, $crewMember);
+// }
+
+  public function edit($id)
+{
+    $crewMember = CrewMember::findOrFail($id);
+    // dd($crewMember);
+    return view('admin.crew.edit', compact('crewMember'));
+}
 
     public function update(Request $request, CrewMember $crewMember)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'role' => 'required|string|max:255',
-            'bio' => 'required|string',
-            'image' => 'nullable|image|max:2048',
-        ]);
+      $data = $request->validate([
+        'name_fr' => 'required|string|max:255',
+        'name_en' => 'required|string|max:255',
+        'role_fr' => 'required|string|max:255',
+        'role_en' => 'required|string|max:255',
+        'bio_fr' => 'required|string',
+        'bio_en' => 'required|string',
+        'image' => 'nullable|image|max:2048',
+    ]);
 
-        $data = $request->except('image');
-
-        if ($request->hasFile('image')) {
-            if ($crewMember->image) {
-                Storage::disk('public')->delete($crewMember->image);
-            }
-            $data['image'] = $request->file('image')->store('crew', 'public');
+    if ($request->hasFile('image')) {
+        if ($crewMember->image) {
+            Storage::disk('public')->delete($crewMember->image);
         }
+        $data['image'] = $request->file('image')->store('crew', 'public');
+    }
 
-        $crewMember->update($data);
+    $crewMember->update($data);
 
-        return redirect()->route('admin.crew.index')->with('success', 'Membre mis à jour !');
+    return redirect()->route('admin.crew.index')->with('success', 'Membre mis à jour !');
     }
 
     public function destroy(CrewMember $crewMember)

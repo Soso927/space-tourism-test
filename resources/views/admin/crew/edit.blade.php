@@ -1,162 +1,114 @@
-{{-- resources/views/crew/edit.blade.php --}}
+{{-- resources/views/admin/crew/edit.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ 'Modifier un membre d’équipage — Admin' }}
+            Modifier un membre de l'équipage
         </h2>
     </x-slot>
 
-    {{-- La variable passée à cette vue doit être nommée $crewMember --}}
-    <section class="max-w-3xl mx-auto px-6 py-8">
+    <section class="max-w-4xl mx-auto px-6 py-8">
 
         {{-- Titre + retour --}}
         <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-bold">Modifier : {{ $crewMember->name }}</h1>
+            <h1 class="text-2xl font-bold">Modifier un membre</h1>
             <a href="{{ route('admin.crew.index') }}" class="underline">Retour à la liste</a>
         </div>
 
-        {{-- Erreurs globales --}}
-        @if ($errors->any())
-            <div class="mb-4 rounded border border-red-500/40 bg-red-500/10 text-red-200 px-4 py-3">
-                <p class="font-medium mb-1">Veuillez corriger les erreurs suivantes :</p>
-                <ul class="list-disc pl-5">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         {{-- Formulaire --}}
-        <form action="{{ route('admin.crew.update', $crewMember) }}" method="POST" enctype="multipart/form-data"
-            class="space-y-6">
+        <form action="{{ route('admin.crew.update', $crewMember->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-            {{-- Nom complet (FR) --}}
-            <div>
-                <label for="name_fr" class="block text-sm font-medium mb-1">Nom complet</label>
-                <input type="text" id="name_fr" name="name_fr"
-                    value="{{ old('name', $crewMember->name) }}"
-                    class="w-full rounded border border-white/10 bg-white/5 px-3 py-2"
-                    placeholder="ex : Douglas Hurley" required>
-                @error('name')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
+            <div class="grid grid-cols-1 gap-4">
 
-            {{-- Full Name (EN) --}}
-            <div>
-                <label for="name_en" class="block text-sm font-medium mb-1">Full Name (EN)</label>
-                <input type="text" id="name_en" name="name_en"
-                    value="{{ old('name_en', $crewMember->name_en) }}"
-                    class="w-full rounded border border-white/10 bg-white/5 px-3 py-2"
-                    placeholder="e.g.: Douglas Hurley" required>
-                @error('name_en')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
+                {{-- Nom FR --}}
+                <div>
+                    <label class="block text-sm font-medium">Nom (FR)</label>
+                    <input type="text" name="name_fr" value="{{ old('name_fr', $crewMember->name_fr) }}"
+                        class="mt-1 w-full border rounded-md p-2" required>
+                    @error('name_fr')
+                        <div class="text-sm text-red-600">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            {{-- Rôle (FR) --}}
-            <div>
-                <label for="role_fr" class="block text-sm font-medium mb-1">Rôle (ex: Commander, Pilot)</label>
-                <input type="text" id="role_fr" name="role_fr"
-                    value="{{ old('role', $crewMember->role) }}"
-                    class="w-full rounded border border-white/10 bg-white/5 px-3 py-2"
-                    placeholder="ex : Commander" required>
-                @error('role')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
+                {{-- Nom EN --}}
+                <div>
+                    <label class="block text-sm font-medium">Nom (EN)</label>
+                    <input type="text" name="name_en" value="{{ old('name_en', $crewMember->name_en) }}"
+                        class="mt-1 w-full border rounded-md p-2" required>
+                    @error('name_en')
+                        <div class="text-sm text-red-600">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            {{-- Role (EN) --}}
-            <div>
-                <label for="role_en" class="block text-sm font-medium mb-1">Role (EN)</label>
-                <input type="text" id="role_en" name="role_en"
-                    value="{{ old('role_en', $crewMember->role_en) }}"
-                    class="w-full rounded border border-white/10 bg-white/5 px-3 py-2"
-                    placeholder="e.g.: Commander" required>
-                @error('role_en')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
+                {{-- Rôle FR --}}
+                <div>
+                    <label class="block text-sm font-medium">Rôle (FR)</label>
+                    <input type="text" name="role_fr" value="{{ old('role_fr', $crewMember->role_fr) }}"
+                        class="mt-1 w-full border rounded-md p-2" required>
+                    @error('role_fr')
+                        <div class="text-sm text-red-600">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            {{-- Biographie (FR) --}}
-            <div>
-                <label for="bio" class="block text-sm font-medium mb-1">Biographie</label>
-                <textarea id="bio" name="bio" rows="5"
-                    class="w-full rounded border border-white/10 bg-white/5 px-3 py-2"
-                    placeholder="Brève biographie du membre d'équipage…" required>{{ old('bio', $crewMember->bio) }}</textarea>
-                @error('bio')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
+                {{-- Rôle EN --}}
+                <div>
+                    <label class="block text-sm font-medium">Rôle (EN)</label>
+                    <input type="text" name="role_en" value="{{ old('role_en', $crewMember->role_en) }}"
+                        class="mt-1 w-full border rounded-md p-2" required>
+                    @error('role_en')
+                        <div class="text-sm text-red-600">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            {{-- Biography (EN) --}}
-            <div>
-                <label for="bio_en" class="block text-sm font-medium mb-1">Biography (EN)</label>
-                <textarea id="bio_en" name="bio_en" rows="5"
-                    class="w-full rounded border border-white/10 bg-white/5 px-3 py-2"
-                    placeholder="Short biography…" required>{{ old('bio_en', $crewMember->bio_en) }}</textarea>
-                @error('bio_en')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
+                {{-- Bio FR --}}
+                <div>
+                    <label class="block text-sm font-medium">Biographie (FR)</label>
+                    <textarea name="bio_fr" rows="4" class="mt-1 w-full border rounded-md p-2" required>{{ old('bio_fr', $crewMember->bio_fr) }}</textarea>
+                    @error('bio_fr')
+                        <div class="text-sm text-red-600">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            {{-- Image --}}
-            <div>
-                <label for="image" class="block text-sm font-medium mb-1">
-                    Image (laisser vide pour ne pas changer)
-                </label>
+                {{-- Bio EN --}}
+                <div>
+                    <label class="block text-sm font-medium">Biographie (EN)</label>
+                    <textarea name="bio_en" rows="4" class="mt-1 w-full border rounded-md p-2" required>{{ old('bio_en', $crewMember->bio_en) }}</textarea>
+                    @error('bio_en')
+                        <div class="text-sm text-red-600">{{ $message }}</div>
+                    @enderror
+                </div>
 
                 {{-- Image actuelle --}}
-                @php
-                    $currentImage = $crewMember->image ?? null;
-                @endphp
+                <div>
+                    <label class="block text-sm font-medium mb-2">Image actuelle</label>
 
-                @if ($currentImage)
-                    <div class="mb-3">
-                        <p class="text-sm opacity-80 mb-2">Image actuelle :</p>
-                        <img src="{{ asset('storage/' . $currentImage) }}"
-                             alt="Image actuelle de {{ $crewMember->name }}"
-                             class="max-h-40 rounded border border-white/10">
-                    </div>
-                @endif
-
-                <input type="file" id="image" name="image" accept="image/*"
-                    class="w-full rounded border border-white/10 bg-white/5 px-3 py-2">
-                @error('image')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-
-                {{-- Aperçu si nouvelle image --}}
-                <div id="previewContainer" class="mt-3 hidden">
-                    <p class="text-sm opacity-80 mb-2">Aperçu de la nouvelle image :</p>
-                    <img id="previewImage" src="" alt="Prévisualisation"
-                        class="max-h-40 rounded border border-white/10">
+                    @if ($crewMember->image)
+                        <img src="{{ asset('storage/' . $crewMember->image) }}"
+                            class="w-32 h-32 object-cover rounded-md border">
+                    @else
+                        <p class="text-sm text-gray-500">Aucune image disponible</p>
+                    @endif
                 </div>
-            </div>
 
-            <div class="pt-4">
-                <button type="submit"
-                    class="inline-flex items-center rounded bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700">
-                    Mettre à jour
-                </button>
+                {{-- Nouvelle image --}}
+                <div>
+                    <label class="block text-sm font-medium">Nouvelle image (optionnel)</label>
+                    <input type="file" name="image" class="mt-1 w-full" accept="image/*">
+                    @error('image')
+                        <div class="text-sm text-red-600">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- Bouton de validation --}}
+                <div class="pt-4">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                        Mettre à jour
+                    </button>
+                </div>
+
             </div>
         </form>
+
     </section>
-
-    {{-- Script pour la prévisualisation --}}
-    <script>
-        const fileInput = document.getElementById('image');
-        const previewContainer = document.getElementById('previewContainer');
-        const previewImage = document.getElementById('previewImage');
-
-        if (fileInput) {
-            fileInput.addEventListener('change', (e) => {
-                const [file] = e.target.files || [];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = ({ target }) => {
-                        previewImage.src = target.result;
-                        previe
+</x-app-layout>
