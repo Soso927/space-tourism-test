@@ -51,6 +51,11 @@
                             Gestion des équipages
                         </x-nav-link>
                     @endrole
+                    @role('admin|technologyManager')
+                        <x-nav-link :href="route('admin.technologies.index')" :active="request()->routeIs('admin.technologies.*')">
+                            Gestion des technologies
+                        </x-nav-link>
+                    @endrole
                 </div>
             </div>
             <!-- Settings Dropdown -->

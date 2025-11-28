@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\PlanetController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\CrewMemberController;
+use App\Http\Controllers\TechnologyController;
 /*
 |--------------------------------------------------------------------------
 | Front-office public (maquette)
@@ -15,8 +16,7 @@ use App\Http\Controllers\CrewMemberController;
 Route::get('/', fn () => view('vue.accueil'))->name('accueil');
 
 Route::get('/equipage/{slug?}', [CrewMemberController::class, 'show'])->name('equipage');
-Route::get('/technologie', fn () => view('vue.technologie'))->name('technologie');
-
+Route::get('/technologie/{slug?}', [TechnologyController::class, 'show'])->name('technologie');
 /*
 |--------------------------------------------------------------------------
 | Changement de langue (FR / EN)
@@ -71,6 +71,12 @@ Route::prefix('admin')->middleware(['auth', 'role:admin|planetManager'])->group(
     Route::resource('crew', CrewMemberController::class)
         ->names('admin.crew');
 
+});
+
+// Routes admin (dans le groupe admin existant)
+Route::prefix('admin')->middleware(['auth', 'role:admin|technologyManager'])->group(function () {
+    // ... tes autres routes admin ...
+    Route::resource('technologies', TechnologyController::class)->names('admin.technologies');
 });
 
 
