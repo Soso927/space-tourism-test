@@ -11,7 +11,6 @@ class CrewMemberController extends Controller
     public function index()
     {
         $crewMembers = CrewMember::paginate(10);
-        dd($crewMembers); // Ceci affichera les données
         return view('admin.crew.index', compact('crewMembers'));
     }
 
@@ -20,84 +19,79 @@ class CrewMemberController extends Controller
         return view('admin.crew.create');
     }
 
-public function store(Request $request)
-{
-    $data = $request->validate([
-        'name_fr' => 'required|string|max:255',
-        'name_en' => 'required|string|max:255',
-        'role_fr' => 'required|string|max:255',
-        'role_en' => 'required|string|max:255',
-        'bio_fr' => 'required|string',
-        'bio_en' => 'required|string',
-        'image' => 'required|image|max:2048',
-    ]);
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name_fr' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'role_fr' => 'required|string|max:255',
+            'role_en' => 'required|string|max:255',
+            'bio_fr' => 'required|string',
+            'bio_en' => 'required|string',
+            'image' => 'required|image|max:2048',
+        ]);
 
-    // Correction ici
-    $data['image'] = $request->file('image')->store('crew', 'public');
+        $data['image'] = $request->file('image')->store('crew', 'public');
+        CrewMember::create($data);
 
-    CrewMember::create($data);
+        return redirect()
+            ->route('admin.crew.index')
+            ->with('success', 'Membre ajouté !');
+    }
 
-    return redirect()
-        ->route('admin.crew.index')
-        ->with('success', 'Membre ajouté !');
-}
-//     public function edit($id)
-// {
-//     $crewMember = CrewMember::find($id);
-
-//     dd($id, $crewMember);
-// }
-
-  public function edit($id)
-{
-    $crewMember = CrewMember::findOrFail($id);
-    // dd($crewMember);
-    return view('admin.crew.edit', compact('crewMember'));
-}
+    public function edit($id)
+    {
+        $crewMember = CrewMember::findOrFail($id);
+        return view('admin.crew.edit', compact('crewMember'));
+    }
 
     public function update(Request $request, CrewMember $crewMember)
     {
-      $data = $request->validate([
-        'name_fr' => 'required|string|max:255',
-        'name_en' => 'required|string|max:255',
-        'role_fr' => 'required|string|max:255',
-        'role_en' => 'required|string|max:255',
-        'bio_fr' => 'required|string',
-        'bio_en' => 'required|string',
-        'image' => 'nullable|image|max:2048',
-    ]);
-
-    if ($request->hasFile('image')) {
-        if ($crewMember->image) {
-            Storage::disk('public')->delete($crewMember->image);
-        }
-        $data['image'] = $request->file('image')->store('crew', 'public');
-    }
-
-    $crewMember->update($data);
-
-    return redirect()->route('admin.crew.index')->with('success', 'Membre mis à jour !');
-    }
-
-  public function destroy(CrewMember $crew)
-{
-    $crew->delete();
-
-    return redirect()->route('admin.crew.index')
-                     ->with('success', 'Membre supprimé avec succès');
-}
-
-  public function show($slug = null)
-    {
-        $crewMembers = CrewMember::all();
-        
-        // Si pas de slug, affiche le premier
-        $current = $slug ? CrewMember::where('slug', $slug)->firstOrFail() : $crewMembers->first();
-        
-        return view('vue.equipage', [
-            'crewMembers' => $crewMembers,
-            'current' => $current,
+        $data = $request->validate([
+            'name_fr' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'role_fr' => 'required|string|max:255',
+            'role_en' => 'required|string|max:255',
+            'bio_fr' => 'required|string',
+            'bio_en' => 'required|string',
+            'image' => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            if ($crewMember->image) {
+                Storage::disk('public')->delete($crewMember->image);
+            }
+            $data['image'] = $request->file('image')->store('crew', 'public');
+        }
+
+        $crewMember->update($data);
+        return redirect()->route('admin.crew.index')->with('success', 'Membre mis à jour !');
     }
 
+    public function destroy(CrewMember $crew)
+    {
+        $crew->delete();
+        return redirect()->route('admin.crew.index')
+                         ->with('success', 'Membre supprimé avec succès');
+    }
+
+public function show(?string $slug = null)
+{
+    if (!$slug) {
+        $member = CrewMember::orderBy('id')->first();
+        
+        if (!$member) {
+            abort(404, 'Aucun membre d\'équipage trouvé');
+        }
+    } else {
+        $member = CrewMember::where('slug', $slug)->firstOrFail();
+    }
+    
+    $allMembers = CrewMember::orderBy('id')->get();
+    
+    return view('vue.equipage', [
+        'member' => $member,
+        'allMembers' => $allMembers,
+    ]);
+}
 }
